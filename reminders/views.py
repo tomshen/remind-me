@@ -15,3 +15,15 @@ def home(request):
 	else:
 		form = ReminderForm()
 	return render(request, 'reminders/index.html', {'form': form, 'scheduled': False})
+
+def mobile(request):
+	if request.method == 'POST':
+		form = ReminderForm(request.POST)
+		if form.is_valid():
+			reminder = form.save(commit=False)
+			reminder.sent = False
+			reminder.save()
+			return render(request, 'reminders/mobile.html', {'scheduled': True})
+	else:
+		form = ReminderForm()
+	return render(request, 'reminders/mobile.html', {'form': form, 'scheduled': False})
