@@ -3,6 +3,7 @@ package main
 import (
     "log"
     "net/http"
+    "./reminder"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -10,7 +11,17 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RemindersHandler(w http.ResponseWriter, r *http.Request) {
-
+    if r.Method == "POST" {
+        err := reminder.NewReminder(
+            r.FormValue("title"),
+            r.FormValue("recipient"),
+            r.FormValue("date"))
+        if err != nil {
+            log.Fatal(err)
+        }
+    } else {
+        http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+    }
 }
 
 func FaviconHandler(w http.ResponseWriter, r *http.Request) {
